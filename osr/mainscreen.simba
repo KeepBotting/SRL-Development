@@ -221,7 +221,7 @@ begin
         Self.Alignment.Top := [@RootInterface.Y1, 4];
         Self.Alignment.Bottom := [@RootInterface.Y1, 337];
 
-        Self.UpTextArea := [7, 7, 500, 25];
+        Self.UpTextArea := [4, 5, 500, 25];
       end;
   end;
 end;

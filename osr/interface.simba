@@ -597,7 +597,7 @@ var
 begin
   GetClientDimensions(ClientWidth, ClientHeight);
 
-  Result := ClientWidth - 1;
+  Result := ClientWidth - 43;
 end;
 
 function TRSRootInterface.Y2(): Int32; override;

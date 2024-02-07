@@ -96,7 +96,7 @@ begin
     SetLength(Result, Bounds.Height() div 15);
     for I := 0 to High(Result) do
     begin
-      B := [Bounds.X1, Bounds.Y1 + (I * 15), Bounds.X2, Bounds.Y1 + (I * 15) + 15];
+      B := [Bounds.X1 + 1, Bounds.Y1 + (I * 15) + 1, Bounds.X2, Bounds.Y1 + (I * 15) + 15];
       if (B.Y2 > Bounds.Y2) then
         Exit;
 
