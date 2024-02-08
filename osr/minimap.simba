@@ -535,5 +535,14 @@ procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
 begin
   inherited;
 
+  Bitmap.DrawText(ToStr(Minimap.GetHPLevel()) + '(' + ToStr(Minimap.GetHPPercent()) + '%)',
+                  Minimap.GetHPCircle().Bounds().Middle(), clRed);
+
+  Bitmap.DrawText(ToStr(Minimap.GetOrbLevel(Minimap.GetPrayerCircle())),
+                  Minimap.GetPrayerCircle().Bounds().Middle(), clRed);
+
+  Bitmap.DrawText(ToStr(Minimap.GetOrbLevel(Minimap.GetRunCircle())),
+                  Minimap.GetRunCircle().Bounds().Middle(), clRed);
+
   Minimap.Draw(Bitmap);
 end;

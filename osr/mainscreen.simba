@@ -921,8 +921,18 @@ begin
 end;
 
 procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
+var
+  i: integer;
 begin
   inherited;
+
+  Bitmap.DrawBox(MainScreen.UpTextArea, clRed);
+  Bitmap.DrawText(MainScreen.GetUpText(), Point(MainScreen.UpTextArea.X1, MainScreen.UpTextArea.Y1+25), clRed);
+  if ChooseOption.IsOpen() then
+  begin
+    for i := 0 to length((ChooseOption.GetOptions())) - 1 do
+      Bitmap.DrawBox(ChooseOption.GetOptions[i].Bounds, clRed);
+  end;
 
   MainScreen.Draw(Bitmap);
 end;
