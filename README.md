@@ -1,6 +1,12 @@
 SRL Resource Library
 =====================
+
 SRL is a library that provides an API for writing bots in Simba for the game Old School RuneScape.
+
+We use the stable build of Simba 1400: https://github.com/Villavu/Simba/releases/tag/simba1400-release
+
+And we support Jagex's new official OSRS client: https://help.jagex.com/hc/en-gb/articles/17160273294097-Jagex-Launcher-FAQ
+
 
 Documentation is available [here](https://villavu.github.io/SRL-Development)
 
