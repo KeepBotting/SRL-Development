@@ -209,7 +209,7 @@ begin
   count1 := SRL.CountColor(0, b);
   count2 := SRL.CountColor(2070783, b);
 
-  Result := ((count1 = 94) and (count2 = 116)) or Self.IsTitle('Bank') or Self.IsTitle('Equip');
+  Result := ((count1 = 0) and (count2 = 116)) or Self.IsTitle('Bank') or Self.IsTitle('Equip');
 
   if Result and waitForItems then
   begin
@@ -1281,6 +1281,17 @@ begin
   Result := (Inventory.Count() = 0) or Self.GetButton(ERSBankButton.DEPOSIT_INVENTORY).Click();
 end;
 
+function TRSBank.IsSlotUsed(B: TBox): Boolean; overload;
+begin
+  // black with tolerance for when item is transparent
+  Result := SRL.CountColor(CTS1(1118740, 35), B) > 0;
+end;
+
+function TRSBank.IsSlotUsed(Slot: Int32): Boolean; overload;
+begin
+  Result := Self.IsSlotUsed(Self.GetSlotBoxes()[Slot]);
+end;
+
 (*
 var Bank
 ~~~~~~~~
@@ -1326,8 +1337,35 @@ begin
 end;
 
 procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
+var
+  i: integer;
+  b: TBox;
 begin
   inherited;
 
-  Bank.Draw(Bitmap);
+  //if bank.IsOpen(10, 1) then
+  begin
+    for i := 0 to length(bank.GetSlotBoxes())-1 do
+    begin
+      if bank.IsSlotUsed(i) then
+      begin
+        Bitmap.drawBox(bank.GetSlotBoxes()[i], clGreen);
+      end else
+      begin
+        Bitmap.drawBox(bank.GetSlotBoxes()[i], clYellow);
+      end;
+    end;
+  end;
+
+  Bitmap.drawBox(bank.Bounds, clYellow);
+
+  b := Bank.Bounds();
+  // searchbox for isopen - TODO fix this
+  b.Y1 := b.Y2 - 39;
+  b.X1 += 240;
+  b.X2 -= 155;
+  b.Y2 -= 25;
+  Bitmap.drawBox(b, clRed);
+
+  //Bank.Draw(Bitmap);
 end;
