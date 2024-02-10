@@ -199,7 +199,9 @@ function TRSBank.IsOpen(waitForItems: Boolean = True): Boolean; overload;
 var
   b: TBox;
   count1, count2: Int32;
+  performance: integer;
 begin
+//  performance := get
   b := Self.Bounds();
   b.Y1 := b.Y2 - 39;
   b.X1 += 240;
@@ -209,7 +211,7 @@ begin
   count1 := SRL.CountColor(0, b);
   count2 := SRL.CountColor(2070783, b);
 
-  Result := ((count1 = 0) and (count2 = 116)) or Self.IsTitle('Bank') or Self.IsTitle('Equip');
+  Result := ((count1 = 0) and (count2 = 116));// or Self.IsTitle('Bank') or Self.IsTitle('Equip');
 
   if Result and waitForItems then
   begin
@@ -1155,13 +1157,13 @@ Example
   
   Bank.WithdrawItem(['Iron full helm', 5, False], True);  
 *)
-function TRSBank.WithdrawItem(Item: TRSBankWithdrawItem; UseQuantityButtons: Boolean): Boolean; deprecated 'User the TRSBankItem version instead';
+{function TRSBank.WithdrawItem(Item: TRSBankWithdrawItem; UseQuantityButtons: Boolean): Boolean; deprecated 'User the TRSBankItem version instead';
 var
   B: TBox;
 begin
   if Self.FindItem(Item.Item, B) then
     Result := Self.WithdrawHelper(B, Item.Quantity, Item.Noted, UseQuantityButtons);
-end;
+end;}
 
 function TRSBank.WithdrawItem(var item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload;
 var
@@ -1290,6 +1292,21 @@ end;
 function TRSBank.IsSlotUsed(Slot: Int32): Boolean; overload;
 begin
   Result := Self.IsSlotUsed(Self.GetSlotBoxes()[Slot]);
+end;
+
+function TRSBank.IsSlotPlaceholder(slot: integer): boolean;
+var
+  x, y, count: integer;
+begin
+  // only matches the transparent outline when placeholder'd
+  count := SRL.CountColor(CTS2(6325142, 14, 0.06, 0.57), self.GetSlotBoxes()[slot]);
+  result := count > 0;
+  writeln('[Bank] IsSlotPlaceholder(): Slot ' + toStr(slot) + ' = ' + toStr(result) + ' with ' + toStr(count) + ' matches');
+if   FindColor(x, y, 1580321, self.GetSlotBoxes()[slot]) then
+begin
+writeLn('[Bank] IsSlotPlaceholder(): FindColor succeeded!');
+result := true
+end;
 end;
 
 (*
