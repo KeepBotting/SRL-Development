@@ -537,6 +537,32 @@ begin
   Result := Self.FindObject(Finder, Self.Bounds());
 end;
 
+function TRSMainScreen.ClickObject(obj: TRSObjectFinder; text: TStringArray;
+                             clickType: integer = MOUSE_LEFT; tries: integer = 1): boolean;
+var
+  i, j: integer;
+  atpa: T2DPointArray;
+begin
+  result := false;
+
+  for i := 1 to tries do
+  begin
+    atpa := self.FindObject(obj);
+    atpa.SortByMiddle(self.GetPlayerBox().Middle());
+    writeLn('[MainScreen] ClickObject(): Wound up with ' + toStr(length(atpa)) + ' search boxes');
+
+    for j := 0 to (length(atpa) - 1) do
+    begin
+      mouse.Move(MiddleTPA(atpa[j]));
+      if self.IsUpText(text) then
+      begin
+        mouse.Click(clickType);
+        exit(true);
+      end;
+    end;
+  end;
+end;
+
 (*
 Mainscreen.IsVisible
 ~~~~~~~~~~~~~~~~~~~~
