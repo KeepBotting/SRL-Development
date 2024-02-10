@@ -1299,14 +1299,46 @@ var
   x, y, count: integer;
 begin
   // only matches the transparent outline when placeholder'd
-  count := SRL.CountColor(CTS2(6325142, 14, 0.06, 0.57), self.GetSlotBoxes()[slot]);
-  result := count > 0;
-  writeln('[Bank] IsSlotPlaceholder(): Slot ' + toStr(slot) + ' = ' + toStr(result) + ' with ' + toStr(count) + ' matches');
-if   FindColor(x, y, 1580321, self.GetSlotBoxes()[slot]) then
-begin
-writeLn('[Bank] IsSlotPlaceholder(): FindColor succeeded!');
-result := true
+  result := FindColor(x, y, 1580321, self.GetSlotBoxes()[slot]);
+  writeLn('[Bank] IsSlotPlaceholder(): Slot ' + toStr(slot) + ' = ' + toStr(result));
 end;
+
+function TRSBank.withdrawAllSlot(tab, slot: integer; text: string): boolean;
+begin
+  result := false;
+
+  if (not self.IsOpen()) then
+  begin
+    writeLn('[Bank] WithdrawSlot(): Bank not open, cannot withdraw!');
+    exit();
+  end;
+
+  self.OpenTab(tab);
+
+  if (not self.IsSlotUsed(slot)) then
+  begin
+    writeLn('[Bank] WithdrawSlot(): Slot ' + toStr(slot) + ' is not occupied, cannot withdraw!');
+    exit();
+  end;
+
+  if (self.IsSlotPlaceholder(slot)) then
+  begin
+    writeLn('[Bank] WithdrawSlot(): Slot is a placeholder, cannot withdraw!');
+    terminateScript();
+    exit();
+  end;
+
+  mouse.Move(self.GetSlotBoxes()[slot]);
+  wait(randomrange(250,500));
+  //srl.Debug();
+
+  if (not mainscreen.IsUpText(text)) then
+  begin
+    writeLn('[Bank] WithdrawSlot(): Slot text does not match, cannot withdraw!');
+    exit();
+  end;
+
+  exit(chooseoption.select('Withdraw-All'));
 end;
 
 (*
