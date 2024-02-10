@@ -311,6 +311,7 @@ begin
     
     Result := OCR.RecognizeNumber(B, TOCRColorFilter.Create([$FFFFFF]), RS_FONT_BOLD_12);
   end;
+  writeLn('[Login] GetCurrentWorld(): ' + toStr(result));
 end;
 
 (*
