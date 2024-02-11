@@ -214,8 +214,9 @@ end;
 
 function TRSInventory.IsSlotUsed(B: TBox): Boolean; overload;
 begin
+  chooseoption.close();
   // black with tolerance for when item is transparent
-  Result := SRL.CountColor(CTS1(1118740, 35), B) > 0;
+  Result := countColor(0, B) > 0;
 end;
 
 function TRSInventory.IsSlotUsed(Slot: Int32): Boolean; overload;
@@ -987,8 +988,16 @@ begin
 end;
 
 procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
+var
+  i: integer;
 begin
   inherited;
 
-  Inventory.Draw(Bitmap);
+  for i := 0 to 27 do
+  begin
+    if (inventory.IsSlotUsed(i)) then Bitmap.drawbox(inventory.GetSlotBox(i), clRed) else
+    Bitmap.drawbox(inventory.GetSlotBox(i), clGreen);
+  end;
+
+  //Inventory.Draw(Bitmap);
 end;

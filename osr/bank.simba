@@ -201,6 +201,7 @@ var
   count1, count2: Int32;
   performance: integer;
 begin
+  writeln('HOW IS THIS GETTING CALLED?');
 //  performance := get
   b := Self.Bounds();
   b.Y1 := b.Y2 - 39;
@@ -1393,7 +1394,7 @@ begin
   inherited;
 
   //if bank.IsOpen(10, 1) then
-  begin
+  {begin
     for i := 0 to length(bank.GetSlotBoxes())-1 do
     begin
       if bank.IsSlotUsed(i) then
@@ -1416,5 +1417,5 @@ begin
   b.Y2 -= 25;
   Bitmap.drawBox(b, clRed);
 
-  //Bank.Draw(Bitmap);
+  //Bank.Draw(Bitmap);}
 end;
