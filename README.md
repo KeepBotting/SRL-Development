@@ -17,9 +17,13 @@ To use most scripts, your client options must match ours:
 
 ![image](https://github.com/KeepBotting/SRL-Development/assets/7429071/7ba0340c-d148-4ac0-849a-ffbad57d8da0)
 
-![image](https://github.com/KeepBotting/SRL-Development/assets/7429071/d6f25a82-82de-4e37-aa4a-d823dfe41246)
+![image](https://github.com/KeepBotting/SRL-Development/assets/7429071/9218bff8-63db-4184-b196-40dd46ec6fde)
 
-![image](https://github.com/KeepBotting/SRL-Development/assets/7429071/69b5adda-c910-41ff-b360-8eb54a47d1b7)
+![image](https://github.com/KeepBotting/SRL-Development/assets/7429071/829eb63a-af06-40f7-ae5e-ea6797de8a9f)
+
+![image](https://github.com/KeepBotting/SRL-Development/assets/7429071/ce77202e-c38c-4af8-8d53-a5dd1f87e4ff) --> ![image](https://github.com/KeepBotting/SRL-Development/assets/7429071/f0fcd2ff-e7f6-4dd1-a982-cce6fcd5dddf)
+
+
 
 
 ## Features
