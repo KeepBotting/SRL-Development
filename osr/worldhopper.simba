@@ -258,10 +258,10 @@ function TRSWorldHopper.Hop(targetWorlds: TIntegerArray): Boolean;
 var
   visibleWorlds: TIntegerArray;
   ocrBounds: TBoxArray;
-  currentWorld: Int32;
+  currentWorld: integer;
   i: Int32;
-  nextWorld: Int32;
-  timeOut: UInt64;
+  nextWorld: integer;
+  timeOut: integer;
 begin
   if GetSystemTime() < Self.ReadyTime then
     Exit;
