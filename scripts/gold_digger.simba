@@ -1,0 +1,116 @@
+program new;
+{$i SRL/osr.simba}
+
+const
+  STATE_BANK  = 0;
+  STATE_WALL  = 1;
+  STATE_DOOR  = 2;
+  STATE_ROCKS = 3;
+
+var
+  walker: TRSWalker;
+
+procedure create();
+var
+  w: TOSWindow;
+begin
+  srl.Setup();
+
+  if findChildWindow('Old School RuneScape', 'JagRenderView', w) then
+  begin
+    client.getIOManager().setTarget(w);
+  end else
+  begin
+    writeLn('OSRS client not detected! This is unsupported: please launch client manually.');
+    writeLn('Terminating!');
+    terminateScript();
+  end;
+
+  activateClient();
+  wait(1000);
+
+  if (rsclient.IsLoggedIn()) then
+  begin
+    writeLn('Player is logged in already!');
+  end else
+  begin
+    writeLn('Not logged in! This is unsupported: please log in manually.');
+    writeLn('Terminating!');
+    terminateScript();
+  end;
+
+  walker.Setup('world');
+end;
+
+procedure useBank();
+begin
+end;
+
+procedure wall();
+begin
+end;
+
+procedure door();
+begin
+end;
+
+procedure rocks();
+begin
+end;
+
+// detects the game state
+function getState(): integer;
+var
+  position: TPoint;
+  invFull, pastWall, pastDoor: boolean;
+  hasPick, hasRunes, inBank, lost: boolean;
+  shouldTele: boolean;
+begin
+  result := -1;
+  clearDebug();
+  writeLn('Detecting game state');
+
+  //minimap.SetCompassAngle(0);
+  position := walker.GetMyPos();
+  writeLn('Current position: ' + toStr(position));
+
+  inventory.Open();
+  invFull := inventory.IsFull();
+
+  if (position.Y > 381) then pastWall := true;
+  if (position.Y > 474) then pastDoor := true;
+  if (position.Y < 166) then inBank := true;
+  if ((pastWall) and (pastDoor)) then inBank := false;
+
+  if ((not invFull) and (not pastDoor)) then result := STATE_DOOR;
+  if ((not invFull) and (not pastWall)) then result := STATE_WALL;
+  if ((not invFull) and (pastDoor)) then result := STATE_ROCKS;
+
+  if ((not invFull) and (inBank)) then result := STATE_BANK; //broke???
+  if (invFull) then result := STATE_BANK;
+
+  writeLn('Detected state: ' + toStr(result));
+end;
+
+procedure handleState(state: integer);
+begin
+  case (state) of
+    STATE_BANK: useBank();
+    STATE_WALL: wall();
+    STATE_DOOR: door();
+    STATE_ROCKS: rocks();
+    -1: exit();
+  end;
+end;
+
+
+begin
+  create();
+  wait(2500);
+
+  repeat
+    walker.DebugPosition();
+    wait(1000);
+  until(not rsclient.IsLoggedIn());
+
+end.

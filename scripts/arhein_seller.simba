@@ -1,0 +1,113 @@
+program ArheinSeller;
+{$i SRL/osr.simba}
+
+// Hops worlds and sells a configurable amount of items from chosen inventory slots
+// to Arhein. Automatically terminates when items are sold or after a random amount
+// of time.
+
+const
+    // Integer array of slots to sell. Remember the array index starts at 0!
+    SELL_SLOTS  = [1..27];
+    SELL_AMOUNT = 10;
+var
+  window: TOSWindow;
+  windows: TOSWindowArray;
+  obj: TRSObjectFinder;
+  searchResults: T2DPointArray;
+  i, lastWorldIdx: integer;
+
+// Finds, clicks, and chooses option on Arhein NPC.
+// Returns true if his shop interface ever appeared.
+function tradeArhein(waitTime: integer = 5000): boolean;
+var
+  x, y, timer: integer;
+  arhein: TRSObjectFinder;
+begin
+writeln('entering tradearhein');
+  result := false;
+
+  arhein.ColorClusters += [CTS2(1469059, 13, 0.05, 0.92), //beige shirt
+                           CTS2(3487033, 6, 0.01, 0.38), //black pants and hair
+                           10];
+
+  if mainscreen.ClickObject(arhein, ['Arhein'], MOUSE_RIGHT) then
+   if chooseoption.Select('Trade') then
+   begin
+     repeat
+       wait(100);
+       timer += 100;
+       if FindColor(x, y, 2070783, mainscreen.Bounds) then
+       begin
+         writeLn('leaving tradearhein');
+         exit(true);
+       end;
+     until(timer >= waitTime);
+   end;
+
+   writeLn('Timed out waiting for shop!');
+end;
+
+function sellItems(): boolean;
+var
+  i: integer;
+begin
+writeln('entering sellitems');
+  for i in SELL_SLOTS do
+  if inventory.isslotused(inventory.GetSlotBox(i)) then
+  begin
+  writeln('Slot ' + tostr(i) + ' is used - selling!');
+  inventory.hoverslot(i, true);
+  wait(randomrange(250,500));
+   if (true) then
+   inventory.ClickSlot(i, 'Sell ' + toStr(SELL_AMOUNT), true);
+ end else writeln('Slot ' + tostr(i) + ' is not used - skipping!');
+  wait(randomRange(750, 1000));
+  keyboard.PressKey(VK_ESCAPE);
+  wait(randomRange(1500, 3000));
+ writeln('leaving sellitems');
+end;
+
+function hopWorlds(): boolean;
+begin
+writeln('entering hopworlds');
+  worldhopper.hop([302,303,304,305,306,307,309,310,311,312,313,314]);//,315,317,320,321,322,323,324,325,327,328,329,331,332,333,334,336,337,338,339,340,341,342,343,344,346,347,348,350,351,352,354,355]);
+  writeln('leaving hopworlds');
+end;
+
+begin
+  srl.Setup();
+
+  if findChildWindow('Old School RuneScape', 'JagRenderView', window) then
+  begin
+    client.getIOManager().setTarget(window);
+  end else
+  begin
+    writeLn('OSRS client not detected! This is unsupported: please launch client manually.');
+    writeLn('Terminating!');
+    terminateScript();
+  end;
+
+  activateClient();
+
+  if (rsclient.IsLoggedIn()) then
+  begin
+    writeLn('Player is logged in already!');
+  end else
+  begin
+    writeLn('Not logged in! This is unsupported: please log in manually.');
+    writeLn('Terminating!');
+    terminateScript();
+  end;
+
+  //worldhopper.hop([302]);
+  wait(5000);
+
+  repeat
+  //srl.Debug();
+  tradeArhein();
+  sellItems();
+  hopWorlds();
+  wait(randomrange(10000,20000));
+  until(false);
+
+end.

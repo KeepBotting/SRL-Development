@@ -1,0 +1,158 @@
+program BankStander;
+{$i SRL/osr.simba}
+
+// Withdraws configurable amounts of specified bank slots and combines them.
+
+const
+    ITEM_1_TAB  = 3;
+    ITEM_1_SLOT = 8;
+    ITEM_1_TEXT = 'Yew logs';
+    ITEM_1_AMOUNT = -1; // -1 for Withdraw-All
+
+    MAKE_MENU_OPTION = '3'; // 2 = Shortbows
+                            // 3 = Longbows
+
+    TOOL_REQUIRED = true; // are we bankstanding with a tool in slot 1?
+    TOOL_TEXT_EXPECTED = 'Knife'; // what tool text to check for
+
+    // do we withdraw secondaries?
+    USE_SECOND_ITEM = false;
+
+    ITEM_2_TAB  = 0;
+    ITEM_2_SLOT = 0;
+    ITEM_2_TEXT = '';
+    ITEM_2_AMOUNT = 14; // -1 for Withdraw-All
+
+var
+  window: TOSWindow;
+  windows: TOSWindowArray;
+  obj: TRSObjectFinder;
+  searchResults: T2DPointArray;
+  i: integer;
+  pressOnce: boolean;
+
+function TRSBank.waitOpen(waitTime: integer = 2500): boolean;
+var
+  x, y, timer: integer;
+begin
+  writeLn('[Bank] WaitOpen(): Started...');
+  timer := GetSystemTime();
+  repeat
+    wait(100);
+    result := countColor(2070783, mainscreen.Bounds) > 1000;
+    if (result) then exit();
+  until(GetSystemTime() - timer >= waitTime);
+  writeLn('[Bank] WaitOpen(): Bank never appeared!');
+end;
+
+function openBank(): boolean;
+begin
+  writeln('Opening bank');
+  // guardians of the rift bank chest
+  //obj.Colors += CTS2(6325142, 14, 0.06, 0.57);
+  // motherlode mine
+  //obj.Colors += CTS2(8355976, 7, 0.27, 0.17);
+  // wc guild bank chest
+  obj.ColorClusters += [CTS2(2842999, 5, 0.10, 0.46),CTS2(5599107, 5, 0.10, 0.20), 25];
+  // wintertodt
+  //obj.ColorClusters += [CTS2(5328964, 4, 0.39, 0.35),CTS2(14800854, 12, 0.14, 0.68), 20];
+  if mainscreen.ClickObject(obj, ['Bank'], MOUSE_RIGHT) then
+   if chooseoption.Select('Bank') then
+    result := bank.waitOpen();
+
+  if (not result) then
+  begin
+    writeln('Failed to open bank!');
+    terminatescript();
+  end;
+end;
+
+
+
+
+function doBanking(): boolean;
+begin
+  //result := bank.IsOpen();
+    if (true) then
+    begin
+      writeln('Doing banking');
+      //bank.DepositItem(['', bank.QUANTITY_ALL, true]);
+      if inventory.IsSlotUsed(1) then
+      begin
+        mouse.move(inventory.GetSlotBox(1));
+        mouse.click(mouse_right);
+        writeln(chooseoption.GetOptions);
+        chooseoption.select('Deoosit-All');
+      end;
+      bank.withdrawAllSlot(ITEM_1_TAB, ITEM_1_SLOT, ITEM_1_TEXT);
+      keyboard.PressKey(VK_ESCAPE);
+    end else
+    begin
+      writeln('Bank not open, could not do banking');
+      terminatescript();
+    end;
+end;
+
+function doAction(): boolean;
+begin
+  writeLn('Doing actions');
+    inventory.Open();
+    inventory.Open();
+    inventory.clickslot(0);
+    inventory.clickslot(1);
+    wait(randomrange(1750, 2250));
+    if (not pressOnce) then
+    begin
+         keyboard.Send(MAKE_MENU_OPTION);
+         pressOnce := true;
+    end else keyboard.send(' ');
+    wait(randomrange(48500, 52500));
+end;
+
+begin
+  srl.Setup();
+  pressOnce := false;
+
+  if findChildWindow('Old School RuneScape', 'JagRenderView', window) then
+  begin
+    client.getIOManager().setTarget(window);
+  end else
+  begin
+    writeLn('OSRS client not detected! This is unsupported: please launch client manually.');
+    writeLn('Terminating!');
+    terminateScript();
+  end;
+
+  activateClient();
+
+  if (rsclient.IsLoggedIn()) then
+  begin
+    writeLn('Player is logged in already!');
+  end else
+  begin
+    writeLn('Not logged in! This is unsupported: please log in manually.');
+    writeLn('Terminating!');
+    terminateScript();
+  end;
+
+      activateClient();
+    inventory.Open();
+    mouse.move(inventory.GetSlotBox(0));
+    if (TOOL_REQUIRED) then
+    begin
+      wait(250);
+      if (not mainscreen.IsUpText(TOOL_TEXT_EXPECTED)) then
+      begin
+        writeln(mainscreen.GetUpText());
+        writeLn('Lost our tool somehow!');
+        //terminateScript();
+      end;
+    end;
+
+  repeat
+   openBank();
+   doBanking();
+   doAction();
+  until(false);
+
+end.
