@@ -201,8 +201,8 @@ var
   count1, count2: Int32;
   performance: integer;
 begin
-  writeln('HOW IS THIS GETTING CALLED?');
-//  performance := get
+  self.DebugLn('TRSBank.IsOpen was called when it probably should not have been!');
+
   b := Self.Bounds();
   b.Y1 := b.Y2 - 39;
   b.X1 += 240;
@@ -1301,7 +1301,7 @@ var
 begin
   // only matches the transparent outline when placeholder'd
   result := FindColor(x, y, 1580321, self.GetSlotBoxes()[slot]);
-  writeLn('[Bank] IsSlotPlaceholder(): Slot ' + toStr(slot) + ' = ' + toStr(result));
+  self.DebugLn('IsSlotPlaceholder(): Slot ' + toStr(slot) + ' = ' + toStr(result));
 end;
 
 function TRSBank.withdrawAllSlot(tab, slot: integer; text: string): boolean;
@@ -1310,7 +1310,7 @@ begin
 
   if (not self.IsOpen()) then
   begin
-    writeLn('[Bank] WithdrawSlot(): Bank not open, cannot withdraw!');
+    self.DebugLn('WithdrawAllSlot(): Bank not open, cannot withdraw!');
     exit();
   end;
 
@@ -1318,28 +1318,27 @@ begin
 
   if (not self.IsSlotUsed(slot)) then
   begin
-    writeLn('[Bank] WithdrawSlot(): Slot ' + toStr(slot) + ' is not occupied, cannot withdraw!');
+    self.DebugLn('WithdrawAllSlot(): Slot ' + toStr(slot) + ' is not occupied, cannot withdraw!');
     exit();
   end;
 
   if (self.IsSlotPlaceholder(slot)) then
   begin
-    writeLn('[Bank] WithdrawSlot(): Slot is a placeholder, cannot withdraw!');
+    self.DebugLn('WithdrawAllSlot(): Slot is a placeholder, cannot withdraw!');
     terminateScript();
     exit();
   end;
 
   mouse.Move(self.GetSlotBoxes()[slot]);
-  wait(randomrange(250,500));
-  //srl.Debug();
+  wait(SRL.SkewedRand(250, 100, 500));
 
   if (not mainscreen.IsUpText(text)) then
   begin
-    writeLn('[Bank] WithdrawSlot(): Slot text does not match, cannot withdraw!');
+    self.DebugLn('WithdrawSlot(): Slot text does not match, cannot withdraw!');
     exit();
   end;
 
-  exit(chooseoption.select('Withdraw-All'));
+  exit(chooseOption.Select('Withdraw-All'));
 end;
 
 (*
