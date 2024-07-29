@@ -104,7 +104,7 @@ begin
       Result[I].Bounds := B;
     end;
   end;
-  TSRLBaseRecord.DebugLn(toStr(result));
+  writeln(result);
 end;
 
 function TRSChooseOption.Close: Boolean;
