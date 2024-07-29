@@ -66,7 +66,7 @@ Example
 function TRSInventory.IsOpen(): Boolean;
 begin
   Result := (GameTabs.GetCurrentTab() = ERSGameTab.INVENTORY);
-  writeLn('[Inventory] IsOpen(): ' + toStr(result));
+  Self.DebugLn('IsOpen(): ' + toStr(result));
 end;
 
 (*
@@ -200,7 +200,7 @@ function TRSInventory.ClickSlot(Slot: Int32; Option: String = ''; ignoreOpen: bo
 begin
   if Self.HoverSlot(Slot, ignoreOpen) then
   begin
-    writeLn('[Inventory] ClickSlot(): Hovering slot ' + toStr(slot));
+    Self.DebugLn('Hovering inventory slot ' + toStr(slot));
     if (Option <> '') then
       Result := ChooseOption.Select(Option)
     else
