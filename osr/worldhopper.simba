@@ -135,9 +135,13 @@ function TRSWorldHopper.GetCurrentWorld(): Int32;
 var
   b: TBox;
 begin
+  Logout.Open();
+  if not logout.IsWorldSwitcherOpen() then
+    Logout.GetButton(ERSLogoutButton.WORLD_SWITCHER).Click(MOUSE_LEFT);
   b := Self.Bounds();
   b.Y2 := b.Y1 + 24;
   Result := OCR.RecognizeNumber(b, TOCRColorFilter.Create([$1F98FF]), RS_FONT_BOLD_12);
+  self.DebugLn('GetCurrentWorld(): ' + toStr(result));
 end;
 
 (*
