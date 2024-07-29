@@ -222,13 +222,11 @@ begin
   b.Y2 := b.Y1 + 20;
 
   if not WaitUntil(
-    OCR.LocateText(b, 'Please wait', RS_FONT_PLAIN_12, TOCRColorFilter.Create([$FFFFFF]), 1),
+    OCR.LocateText(b, 'Completing world transfer', RS_FONT_PLAIN_12, TOCRColorFilter.Create([$FFFFFF]), 1),
     100,
     2000
   ) then
   begin
-    Self.DebugLn("hop failed: " + chat.GetMessage(7));
-
     if coolDownOnFail then
     begin
       cd := Random(8000, 15000);
@@ -236,7 +234,6 @@ begin
       Self.ReadyTime := GetSystemTime() + cd;
     end;
 
-    keyboard.Send(' '); // TODO this is hacked to attempt hopping even if OCR is broke
     Exit;
   end;
 
