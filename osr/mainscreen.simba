@@ -549,10 +549,16 @@ begin
   begin
     atpa := self.FindObject(obj);
     atpa.SortByMiddle(self.GetPlayerBox().Middle());
-    writeLn('[MainScreen] ClickObject(): Wound up with ' + toStr(length(atpa)) + ' search boxes');
+    if (length(atpa) <> 0) then
+     self.DebugLn('ClickObject(): Finder returned ' + toStr(length(atpa)) + ' search boxes')
+    else begin
+      self.DebugLn('ClickObject(): Finder returned nothing, check your colors and failsafes!');
+      exit();
+    end;
 
     for j := 0 to (length(atpa) - 1) do
     begin
+      self.DebugLn('ClickObject(): Searching index ' + toStr(j));
       mouse.Move(MiddleTPA(atpa[j]));
       if self.IsUpText(text) then
       begin
