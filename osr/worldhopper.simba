@@ -86,12 +86,12 @@ begin
   if not scrollBar.IsVisible() or not Self.CanScroll() then
     Exit;
 
-  //Mouse.Scroll(Self.GetScrollArea(scrollBar), Random(1, 3), down);
-  if (down) then Mouse.Move([723,420,734,429]) else Mouse.Move([723,241,733,252]);
+  Mouse.Scroll(Self.GetScrollArea(scrollBar), Random(1, 3), down);
+  {if (down) then Mouse.Move([723,420,734,429]) else Mouse.Move([723,241,733,252]);
   wait(SRL.SkewedRand(55, 30, 105));
   Mouse.Hold(MOUSE_LEFT);
   wait(SRL.SkewedRand(555, 255, 700));
-  Mouse.Release(MOUSE_LEFT);
+  Mouse.Release(MOUSE_LEFT);}
 
   wait(SRL.SkewedRand(250, 150, 350));
 end;
@@ -297,6 +297,7 @@ begin
     i := -1;
 
   nextWorld := targetWorlds[i+1];
+  self.DebugLn('nextWorld: ' + toStr(nextWorld));
 
   timeOut := GetSystemTime() + 30000;
   repeat
